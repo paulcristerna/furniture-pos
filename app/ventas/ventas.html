@@ -1,0 +1,239 @@
+﻿<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Registro de Ventas</h2>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Ventas</h2>
+                    </div>
+
+                    <div class="alert alert-success m-b--10" ng-if="mensajeExito">
+                        <strong>¡Exito!</strong> {{mensajeExito}}
+                    </div>
+                    <div class="alert alert-danger m-b--10" ng-if="mensajeError">
+                        <strong>Error!</strong> {{mensajeExito}}
+                    </div>
+
+                    <div class="body table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Folio Venta</th>
+                                    <th>Clave Cliente</th>
+                                    <th>Nombre</th>
+                                    <th>Total</th>
+                                    <th>Fecha</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="venta in ventas" class="text-capitalize">
+                                    <td>{{venta.folio}}</td>
+                                    <td>{{venta.clave}}</td>
+                                    <td>{{venta.nombre}}</td>
+                                    <td>{{venta.total | currency}}</td>
+                                    <td>{{venta.fecha | date:'short'}}</td>
+                                    <td class="text-success font-bold" ng-if="venta.status == 1">Activo</td>
+                                    <td class="col-red font-bold" ng-if="venta.status == 0">Inactivo</td>
+                                </tr>
+                                <tr ng-if="ventas.length == 0">
+                                    <td colspan="6" class="text-center">No hay ventas registradas.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float float-button" data-toggle="modal" data-target="#agregarVentaModal" ng-click="vaciarVenta()">
+        <i class="material-icons">add</i>
+    </button>
+
+</section>
+
+<div class="modal fade" id="agregarVentaModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="agregarVentaModalLabel">Formulario de Ventas</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row clearfix">
+                    <div ng-show="pasoVenta == 1">
+                        <div class="col-md-12" ng-show="mensajeErrorFrm">
+                            <div class="alert alert-danger">
+                                <strong>¡Aviso!</strong> {{mensajeErrorFrm}}
+                            </div>
+                        </div>
+
+                        <div class="m-b-15">
+                            <div class="col-md-4">
+                                <b>Cliente</b>
+                                <select class="form-control show-tick text-capitalize" ng-model="ventaFrm.cliente">
+                                    <option value="0" selected>-- Seleccione --</option>
+                                    <option ng-repeat="cliente in clientes" value="{{cliente.id}}">{{cliente.nombre}}</option>
+                                </select>
+                            </div>
+    
+                            <div class="col-md-4">
+                                <b>Articulo</b>
+                                <select class="form-control show-tick text-capitalize" ng-model="ventaFrm.articulo" required>
+                                    <option value="0" selected>-- Seleccione --</option>
+                                    <option ng-repeat="articulo in articulos" value="{{articulo.id}}">{{articulo.descripcion}}</option>
+                                </select>
+                            </div>
+    
+                            <div class="col-md-2">
+                                <b>Cantidad</b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <input type="number" class="form-control" ng-model="ventaFrm.cantidad" placeholder="" min="1" max="100">
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-success btn-circle-lg waves-effect waves-circle waves-float" ng-click="agregarArticulo()"><i class="material-icons">add</i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción del Articulo</th>
+                                        <th>Modelo</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Importe</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="articulo in articulosVenta">
+                                        <td>{{articulo.descripcion}}</td>
+                                        <td>{{articulo.modelo}}</td>
+                                        <td><input type="number" class="form-control target" ng-model="articulo.cantidad" min="1" max="{{articulo.existencia}}"></td>
+                                        <td>{{articulo.precio | currency}}</td>
+                                        <td>{{articulo.cantidad * articulo.precio | currency}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm waves-effect" data-toggle="modal" data-target="#confirmarEliminarArticuloModal" ng-click="prepararEliminarArticulo($index, articulo)"><i class="material-icons">delete</i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-right"><strong>Enganche</strong></td>
+                                        <td>{{enganche | currency}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right"><strong>Bonificación enganche</strong></td>
+                                        <td>{{bonificacionEnganche | currency}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right"><strong>Total</strong></td>
+                                        <td>{{totalAdeudo | currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-show="pasoVenta == 2">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="text-center">Abonos Mensuales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>3 abonos de <strong>{{importeAbono3 | currency}}</strong></td>
+                                        <td>Total a pagar <strong>{{totalPagar3 | currency}}</strong></td>
+                                        <td>Se ahorra <strong>{{importeAhorroAbono3 | currency}}</strong></td>
+                                        <td>
+                                            <input name="groupRadiosAbonos" type="radio" id="radioAbono3" class="with-gap" ng-click="seleccionarPlazo(3)" checked />
+                                            <label for="radioAbono3"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>6 abonos de <strong>{{importeAbono6 | currency}}</strong></td>
+                                        <td>Total a pagar <strong>{{totalPagar6 | currency}}</strong></td>
+                                        <td>Se ahorra <strong>{{importeAhorroAbono6 | currency}}</strong></td>
+                                        <td>
+                                            <input name="groupRadiosAbonos" type="radio" id="radioAbono6" class="with-gap" ng-click="seleccionarPlazo(6)" />
+                                            <label for="radioAbono6"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>9 abonos de <strong>{{importeAbono9 | currency}}</strong></td>
+                                        <td>Total a pagar <strong>{{totalPagar9 | currency}}</strong></td>
+                                        <td>Se ahorra <strong>{{importeAhorroAbono9 | currency}}</strong></td>
+                                        <td>
+                                            <input name="groupRadiosAbonos" type="radio" id="radioAbono9" class="with-gap" ng-click="seleccionarPlazo(9)" />
+                                            <label for="radioAbono9"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>12 abonos de <strong>{{importeAbono12 | currency}}</strong></td>
+                                        <td>Total a pagar <strong>{{totalPagar12 | currency}}</strong></td>
+                                        <td>Se ahorra <strong>{{importeAhorroAbono12 | currency}}</strong></td>
+                                        <td>
+                                            <input name="groupRadiosAbonos" type="radio" id="radioAbono12" class="with-gap" ng-click="seleccionarPlazo(12)" />
+                                            <label for="radioAbono12"></label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect col-indigo" ng-if="pasoVenta == 1" ng-click="siguientePasoVenta()" ng-disabled="ventaFrm.cliente <= 0 || articulosVenta.length <= 0">Siguiente</button>
+                <button type="button" class="btn btn-link waves-effect" ng-if="pasoVenta == 2" ng-click="atrasPasoVenta()">Atrás</button>
+                <button type="button" class="btn btn-link waves-effect col-indigo" ng-if="pasoVenta == 2" ng-click="guardarVenta()">Guardar</button>
+                <button type="button" class="btn btn-link waves-effect" data-toggle="modal" data-target="#confirmarCancelarVentaModal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmarEliminarArticuloModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="agregarVentaModalLabel">¿Desea eliminar este articulo?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect col-red" ng-click="eliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmarCancelarVentaModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="agregarVentaModalLabel">¿Quieres cancelar la venta?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect col-red" data-dismiss="modal" ng-click="cancelarVenta()">Sí</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>

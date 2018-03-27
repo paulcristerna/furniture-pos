@@ -1,0 +1,10 @@
+#titulo {
+    font-family: 'Damion', cursive;
+    font-size: 28px;
+}
+
+.float-button {
+    position: absolute;
+    right: 8px;
+    top: 108px;
+}

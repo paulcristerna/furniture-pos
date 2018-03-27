@@ -1,0 +1,66 @@
+﻿<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Configuración General</h2>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Configuración General</h2>
+                    </div>
+                    <div class="alert alert-success m-b--10" ng-if="mensajeExito">
+                        <strong>¡Exito!</strong> {{mensajeExito}}
+                    </div>
+                    <div class="alert alert-danger m-b--10" ng-if="mensajeError">
+                        <strong>Error!</strong> {{mensajeExito}}
+                    </div>
+                    <div class="body">
+                        <form name="configuracionFrmData">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <b>Tasa de Financiamiento</b>
+                                    <div class="input-group">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control money-dollar" ng-model="configuracionFrm.tasaFinanciamiento" placeholder="0.00" min="1" max="100" step=".1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <b>% Enganche</b>
+                                    <div class="input-group">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control money-dollar" ng-model="configuracionFrm.enganche" placeholder="0.00" min="1" max="100" step=".1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <b>Plazo Máximo</b>
+                                    <div class="input-group">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control money-dollar" ng-model="configuracionFrm.plazoMaximo" placeholder="0.00" min="1" max="100" step=".1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-link waves-effect col-indigo" ng-click="guardar(configuracionFrm)" data-toggle="modal" data-target="#confirmacionModal" ng-disabled="!configuracionFrmData.$valid || !configuracionFrmData.$dirty">Guardar</button>
+                                <button type="button" class="btn btn-link waves-effect" ng-click="cancelar()">Cancelar</button>
+                            </div>
+        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

@@ -1,0 +1,128 @@
+﻿<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Catálogo de Articulos</h2>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Articulos</h2>
+                    </div>
+                    <div class="alert alert-success m-b--10" ng-if="mensajeExito">
+                        <strong>¡Exito!</strong> {{mensajeExito}}
+                    </div>
+                    <div class="alert alert-danger m-b--10" ng-if="mensajeError">
+                        <strong>Error!</strong> {{mensajeExito}}
+                    </div>
+                    <div class="body table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Modelo</th>
+                                    <th>Precio</th>
+                                    <th>Existencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="articulo in articulos" class="text-capitalize">
+                                    <td>{{articulo.descripcion}}</td>
+                                    <td>{{articulo.modelo}}</td>
+                                    <td>{{articulo.precio | currency}}</td>
+                                    <td>{{articulo.existencia}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#articuloModal" ng-click="llenarArticulo(articulo)"><i class="material-icons">edit</i></button>
+                                        <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#confirmacionModal" ng-click="llenarArticulo(articulo)"><i class="material-icons">delete</i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="articulos.length == 0">
+                                    <td colspan="4" class="text-center">No hay articulos registrados.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float float-button" data-toggle="modal" data-target="#articuloModal" ng-click="vaciarArticulo()">
+        <i class="material-icons">add</i>
+    </button>
+
+</section>
+
+<div class="modal fade" id="articuloModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="articuloModalLabel">Formulario de Articulos</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row clearfix">
+                    <form name="articuloFrmData">
+                        <div class="col-md-6">
+                            <b>Descripción</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" class="form-control money-dollar" ng-model="articuloFrm.descripcion" placeholder="" maxlength="30" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Modelo</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" class="form-control money-dollar" ng-model="articuloFrm.modelo" placeholder="" maxlength="30" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Precio</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">attach_money</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="number" class="form-control money-dollar" ng-model="articuloFrm.precio" placeholder="0.00" maxlength="30" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Existencia</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="number" class="form-control money-dollar" ng-model="articuloFrm.existencia" placeholder="0" maxlength="30" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect col-indigo" ng-if="accion == 1" ng-click="agregarArticulo(articuloFrm)" ng-disabled="!articuloFrmData.$valid">Guardar</button>
+                <button type="button" class="btn btn-link waves-effect col-indigo" ng-if="accion == 2" ng-click="editarArticulo(articuloFrm)" ng-disabled="!articuloFrmData.$valid">Editar</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmacionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="articuloModalLabel">¿Desea eliminar este articulo?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect col-red" ng-click="eliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
